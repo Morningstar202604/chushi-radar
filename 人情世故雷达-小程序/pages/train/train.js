@@ -1,0 +1,57 @@
+const engine = require('../../utils/engine');
+
+const DIFF_KEYS = ['全部', '入门', '进阶', '高手'];
+
+Page({
+  data: {
+    w: 0, levelName: '', nextText: '', pct: 0,
+    streak: 0, trainedToday: false,
+    today: null,
+    list: [],
+    diffIdx: 0,
+    diffKeys: DIFF_KEYS
+  },
+  onShow() {
+    const S = engine.getState();
+    const w = engine.getWisdom();
+    const lv = engine.getLevel(w);
+    const sk = S.streak || { n: 0, last: '' };
+    const todayStr = engine.todayStr();
+    const trainedToday = sk.last === todayStr;
+    const scs = engine.SCENARIOS;
+    const diff = engine.DIFFS;
+    const todayIdx = new Date().getDate() % scs.length;
+    const today = scs[todayIdx];
+    const td = diff[today.diff] || diff['入门'];
+    this.refreshList();
+    this.setData({
+      w, levelName: lv.cur.name,
+      nextText: lv.nxt ? '距「' + lv.nxt.name + '」还差 ' + (lv.nxt.min - w) + ' 分' : '已达最高段位，世事洞明',
+      pct: lv.pct || 100,
+      streak: sk.n, trainedToday,
+      today: {
+        id: today.id, title: today.title, scene: today.scene,
+        tag: today.tag, diff: today.diff, chip: td.chip, w: td.w
+      }
+    });
+  },
+  refreshList() {
+    const S = engine.getState();
+    const diff = engine.DIFFS;
+    const dk = DIFF_KEYS[this.data.diffIdx];
+    let list = engine.SCENARIOS.map(s => ({
+      id: s.id, title: s.title, scene: s.scene,
+      diff: s.diff, chip: (diff[s.diff] || diff['入门']).chip,
+      best: (S.progress[s.id] || {}).best || 0
+    }));
+    if (dk !== '全部') list = list.filter(x => x.diff === dk);
+    this.setData({ list });
+  },
+  tapDiff(e) {
+    this.setData({ diffIdx: e.currentTarget.dataset.i });
+    this.refreshList();
+  },
+  open(e) {
+    wx.navigateTo({ url: '/pages/scenario/scenario?id=' + e.currentTarget.dataset.id });
+  }
+});

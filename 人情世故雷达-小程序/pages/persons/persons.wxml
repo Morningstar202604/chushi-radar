@@ -1,0 +1,31 @@
+<view style="display:flex;align-items:center;gap:16rpx;padding:20rpx 20rpx 4rpx">
+  <input class="input" style="flex:1" placeholder="搜索姓名 / 身份 / 标签 / 备注…" value="{{q}}" bindinput="onInput" />
+  <button class="btn primary sm" bindtap="addPerson">＋ 添加</button>
+</view>
+
+<scroll-view class="chips-row" scroll-x style="white-space:nowrap;padding:10rpx 20rpx 0">
+  <view class="chip-sel {{item.on ? 'on' : ''}}" wx:for="{{ids}}" wx:key="n" data-i="{{index}}" bindtap="tapIdent">{{item.n}}</view>
+</scroll-view>
+
+<view style="display:flex;align-items:center;padding:6rpx 20rpx 10rpx">
+  <text style="font-size:24rpx;color:#a89b88;margin-right:16rpx">排序</text>
+  <view class="chip-sel {{sortIdx === index ? 'on' : ''}}" wx:for="{{sorts}}" wx:key="*this" data-i="{{index}}" bindtap="tapSort">{{item}}</view>
+</view>
+
+<view wx:if="{{!list.length}}" class="empty">
+  <view class="t">{{total ? '没有匹配的人脉' : '还没有人脉'}}</view>
+  <view class="d">{{total ? '换个关键词或筛选条件试试' : '把生命中重要的人记进来，雷达会自动生成为你经营人情的清单。'}}</view>
+  <button wx:if="{{!total}}" class="btn primary" bindtap="addPerson">添加第一个人</button>
+</view>
+
+<view wx:for="{{list}}" wx:key="id" class="card" style="display:flex;align-items:center;gap:20rpx" bindtap="openDetail" data-id="{{item.id}}">
+  <view style="width:88rpx;height:88rpx;border-radius:50%;background:rgba(127,174,131,.16);color:#5f8575;display:flex;align-items:center;justify-content:center;font-size:34rpx;font-weight:700;flex-shrink:0">{{item.name[0]}}</view>
+  <view style="flex:1">
+    <view style="font-size:30rpx;font-weight:600">{{item.name}} <text class="chip">{{item.identity}}</text></view>
+    <view class="tag-row" wx:if="{{item.tags.length}}">
+      <text class="chip" wx:for="{{item.tags}}" wx:for-item="tag" wx:key="*this">{{tag}}</text>
+    </view>
+    <view style="font-size:22rpx;color:#a89b88">热度 {{item.heat}} · 往来 {{item.eventCount}} 笔 · {{item.lastText}}<text wx:if="{{item.debt > 0}}" style="color:#b65f5f"> · 欠 {{item.debt}}</text></view>
+  </view>
+  <view style="font-size:26rpx;color:#5f8575">›</view>
+</view>

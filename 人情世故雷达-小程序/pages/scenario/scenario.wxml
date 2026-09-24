@@ -1,0 +1,17 @@
+<view class="card" wx:if="{{sc}}">
+  <view style="display:flex;align-items:center;justify-content:space-between">
+    <text class="card-title">{{sc.tag}}</text>
+    <text class="chip {{sc.chip}}">{{sc.diff}} · 智慧值加成 ×{{sc.w}}</text>
+  </view>
+  <view style="font-size:34rpx;font-weight:700;margin:16rpx 0 8rpx">{{sc.title}}</view>
+  <view class="card-sub" style="line-height:1.8">{{sc.scene}}</view>
+  <view class="sep"></view>
+  <view
+    class="chip-sel {{pick === index ? 'on' : ''}}"
+    wx:for="{{sc.choices}}" wx:key="t"
+    data-i="{{index}}" bindtap="choose"
+    style="display:block;margin:14rpx 0;padding:20rpx 24rpx;font-size:27rpx;white-space:normal">
+    {{item.t}}
+  </view>
+  <button class="btn primary block" bindtap="confirm">提交我的应对</button>
+</view>

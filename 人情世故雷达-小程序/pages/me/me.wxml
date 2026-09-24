@@ -1,0 +1,136 @@
+<view class="card" style="display:flex;text-align:center;padding:30rpx 10rpx">
+  <view style="flex:1" wx:for="{{stats}}" wx:key="l">
+    <view style="font-size:44rpx;font-weight:700;color:#5f8575">{{item.n}}</view>
+    <view style="font-size:22rpx;color:#a89b88">{{item.l}}</view>
+  </view>
+</view>
+
+<view class="card">
+  <view style="display:flex;align-items:center;justify-content:space-between">
+    <view class="card-title">待办提醒 <text class="card-sub">{{reminders.length}} 项待办</text></view>
+    <view class="btn sm" bindtap="addReminder">＋ 添加提醒</view>
+  </view>
+  <view wx:for="{{reminders}}" wx:key="id" style="padding:16rpx 0;border-bottom:1rpx solid rgba(185,164,128,.25)">
+    <view style="font-size:27rpx">{{item.content}}</view>
+    <view style="font-size:22rpx;color:#a89b88;margin-top:4rpx">{{item.person ? item.person + ' · ' : ''}}{{item.due}}</view>
+    <view style="display:flex;gap:12rpx;margin-top:10rpx">
+      <view class="btn sm primary" data-id="{{item.id}}" bindtap="quickDone">完成</view>
+      <view class="btn sm danger" data-id="{{item.id}}" bindtap="delReminder">删</view>
+    </view>
+  </view>
+  <view wx:if="{{!reminders.length}}" class="card-sub" style="text-align:center;padding:20rpx 0">没有待办，去「人脉详情」页可以给重要的人添加提醒</view>
+</view>
+
+<view class="card" wx:if="{{month}}">
+  <view class="card-title">本月洞察（{{month.ym}}）</view>
+  <view style="display:flex;margin-top:16rpx;text-align:center">
+    <view style="flex:1"><view style="font-size:36rpx;font-weight:700;color:#5f8575">{{month.count}}</view><view style="font-size:22rpx;color:#a89b88">本月往来</view></view>
+    <view style="flex:1"><view style="font-size:36rpx;font-weight:700;color:#5f8575">{{month.np}}</view><view style="font-size:22rpx;color:#a89b88">本月新人脉</view></view>
+  </view>
+  <view style="font-size:24rpx;color:#a89b88;line-height:1.8;margin-top:12rpx">
+    最常走动：{{month.top}}<br>人情债前三：{{month.debts}}
+  </view>
+</view>
+
+<view class="card">
+  <view class="card-title">近 6 月往来趋势</view>
+  <view class="card-sub">每月记了多少笔往来，看看自己的经营节奏。</view>
+  <view style="display:flex;align-items:flex-end;gap:8rpx;margin-top:20rpx;height:180rpx">
+    <view wx:for="{{trend}}" wx:key="label" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:6rpx">
+      <view style="font-size:20rpx;color:#5f8575;font-weight:700">{{item.c ? item.c : ''}}</view>
+      <view style="width:60%;background:linear-gradient(180deg,#9cbfa8,#5f8575);border-radius:6rpx 6rpx 0 0;height:{{item.c ? item.c / trendMax * 120 : 6}}rpx;opacity:{{item.c ? 1 : .25}}"></view>
+      <view style="font-size:20rpx;color:#a89b88">{{item.label}}</view>
+    </view>
+  </view>
+</view>
+
+<view class="card">
+  <view class="card-title">人情画像</view>
+  <view class="dimrow" wx:for="{{dimRows}}" wx:key="n">
+    <view class="nm">{{item.n}}</view>
+    <view class="track"><view class="fill" style="width:{{item.v}}%"></view></view>
+    <view class="v">{{item.v}}</view>
+  </view>
+  <view style="font-size:24rpx;color:#a89b88;margin-top:10rpx">当前段位：<text style="color:#5f8575;font-weight:700">{{levelName}}</text> · 智慧值 {{w}}</view>
+  <view class="btn sm" style="margin-top:16rpx" bindtap="openReport">年度人情报告</view>
+</view>
+
+<view class="card">
+  <view class="card-title">数据管理</view>
+  <view class="card-sub" style="margin:8rpx 0 12rpx">所有数据只保存在本机微信缓存，不上传任何服务器。换手机前用「复制备份」，新手机「粘贴导入」即可无缝迁移。</view>
+  <view style="display:flex;flex-wrap:wrap">
+    <view class="btn sm" bindtap="copyBackup">复制备份</view>
+    <view class="btn sm" bindtap="openImport">粘贴导入</view>
+    <view class="btn sm danger" bindtap="clearAll">清空数据</view>
+  </view>
+</view>
+
+<view class="card">
+  <view style="text-align:center;padding:10rpx 0 6rpx">
+    <view style="width:110rpx;height:110rpx;margin:0 auto;border-radius:26rpx;background:#5f8575;display:flex;align-items:center;justify-content:center">
+      <view style="width:64rpx;height:64rpx;border:3rpx solid rgba(246,241,228,.9);border-radius:50%;position:relative">
+        <view style="position:absolute;inset:12rpx;border:3rpx solid rgba(246,241,228,.55);border-radius:50%"></view>
+        <view style="position:absolute;left:50%;top:50%;width:14rpx;height:14rpx;transform:translate(-50%,-50%);background:#f6f1e4;border-radius:50%"></view>
+      </view>
+    </view>
+    <view style="font-size:36rpx;font-weight:700;color:#4a4238;margin-top:14rpx;letter-spacing:4rpx">人情世故雷达</view>
+    <view style="font-size:26rpx;color:#5f8575;margin-top:6rpx">把人情账记明白，把关系经营成细水长流</view>
+  </view>
+  <view class="card-sub" style="text-align:center;line-height:1.8;margin-top:10rpx">
+    本地优先 · 数据只存本机 · RENQING RADAR<br><br>
+    以「记录往来 → 自动画像 → 智能提醒 → 情景修炼 → 年度报告」为主线，帮你把人情账记明白、把关系经营成细水长流。<br><br>
+    · 雷达图由 Canvas 绘制，无第三方依赖<br>
+    · 数据仅存本机，隐私安全，可随时备份迁移<br>
+    · 情景均为常见中国式社交场景，答案与点评供参考
+  </view>
+</view>
+
+<!-- 年度报告弹层 -->
+<view class="mask" wx:if="{{showReport}}" bindtap="closeReport" catchtouchmove="noop">
+  <view class="sheet" catchtap="noop" style="max-height:86vh">
+    <view class="sheet-title">年度人情报告 <text style="font-size:22rpx;color:#a89b88">最近 12 个月</text></view>
+    <view class="card" style="margin:0 0 16rpx;text-align:center">
+      <view style="font-size:80rpx;font-weight:700;color:#5f8575">{{report.total}}</view>
+      <view class="card-sub">笔人情往来 · 段位「{{report.levelName}}」· 智慧值 {{report.w}}</view>
+    </view>
+    <view class="card" style="margin:0 0 16rpx">
+      <view class="card-title">月度节奏</view>
+      <view style="display:flex;align-items:flex-end;gap:6rpx;margin-top:16rpx;height:180rpx">
+        <view wx:for="{{report.months}}" wx:key="label" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4rpx">
+          <view style="font-size:18rpx;color:#5f8575">{{item.c ? item.c : ''}}</view>
+          <view style="width:60%;background:linear-gradient(180deg,#9cbfa8,#5f8575);border-radius:4rpx 4rpx 0 0;height:{{item.h}}rpx"></view>
+          <view style="font-size:18rpx;color:#a89b88">{{item.label}}</view>
+        </view>
+      </view>
+      <view class="card-sub" style="margin-top:10rpx">最勤的一个月是 {{report.bestM}}（{{report.peak}} 笔）</view>
+    </view>
+    <view class="card" style="margin:0 0 16rpx">
+      <view class="card-title">这一年，你最常走动的人</view>
+      <view class="tag-row" style="margin-top:10rpx">
+        <text class="chip" wx:for="{{report.top}}" wx:key="*this">{{item}}</text>
+        <text class="chip" wx:if="{{!report.top.length}}">暂无</text>
+      </view>
+      <view class="card-sub" style="margin-top:10rpx">人情债前三：{{report.debts}}</view>
+    </view>
+    <view class="card" style="margin:0">
+      <view class="card-title">年度小结</view>
+      <view style="font-size:26rpx;line-height:1.9;margin-top:8rpx">
+        <view wx:for="{{report.kw}}" wx:key="*this">· {{item}}</view>
+      </view>
+    </view>
+    <view class="btn block" bindtap="closeReport">关闭</view>
+  </view>
+</view>
+
+<!-- 粘贴导入弹层 -->
+<view class="mask" wx:if="{{showImport}}" bindtap="closeImport" catchtouchmove="noop">
+  <view class="sheet" catchtap="noop">
+    <view class="sheet-title">粘贴导入备份</view>
+    <view class="card-sub" style="margin-bottom:10rpx">把之前复制的内容粘贴进来，点导入即可恢复（会覆盖当前数据）。</view>
+    <textarea class="input" style="min-height:240rpx" placeholder="在此粘贴…" value="{{importText}}" bindinput="onImport" />
+    <view style="display:flex;gap:16rpx;margin-top:16rpx">
+      <view class="btn primary" style="flex:1" bindtap="doImport">导入</view>
+      <view class="btn" style="flex:1" bindtap="closeImport">取消</view>
+    </view>
+  </view>
+</view>

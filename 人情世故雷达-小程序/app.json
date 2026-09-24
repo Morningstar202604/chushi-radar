@@ -1,0 +1,33 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/persons/persons",
+    "pages/record/record",
+    "pages/train/train",
+    "pages/me/me",
+    "pages/detail/detail",
+    "pages/scenario/scenario"
+  ],
+  "window": {
+    "navigationBarBackgroundColor": "#fffdf6",
+    "navigationBarTitleText": "人情世故雷达",
+    "navigationBarTextStyle": "black",
+    "backgroundColor": "#f6f1e4",
+    "backgroundTextStyle": "light"
+  },
+  "tabBar": {
+    "color": "#a89b88",
+    "selectedColor": "#5f8575",
+    "backgroundColor": "#fffdf6",
+    "borderStyle": "white",
+    "list": [
+      { "pagePath": "pages/index/index", "text": "雷达" },
+      { "pagePath": "pages/persons/persons", "text": "人脉" },
+      { "pagePath": "pages/record/record", "text": "记录" },
+      { "pagePath": "pages/train/train", "text": "修炼" },
+      { "pagePath": "pages/me/me", "text": "我的" }
+    ]
+  },
+  "sitemapLocation": "sitemap.json",
+  "style": "v2"
+}

@@ -1,0 +1,75 @@
+<!-- 添加 / 编辑表单 -->
+<view wx:if="{{mode === 'add' || mode === 'edit'}}" class="card">
+  <view class="card-title">{{mode === 'add' ? '添加人脉' : '编辑人脉'}}</view>
+  <input class="input" placeholder="姓名（必填）" value="{{form.name}}" bindinput="onName" />
+  <picker mode="selector" range="{{identities}}" value="{{form.identityIdx}}" bindchange="onIdentity">
+    <view class="input" style="display:flex;justify-content:space-between">
+      <text>{{identities[form.identityIdx]}}</text><text style="color:#a89b88">▾</text>
+    </view>
+  </picker>
+  <picker mode="date" value="{{form.birthday}}" bindchange="onBirthday">
+    <view class="input" style="display:flex;justify-content:space-between">
+      <text>{{form.birthday || '生日（可选）'}}</text><text style="color:#a89b88">▾</text>
+    </view>
+  </picker>
+  <input class="input" placeholder="标签，用顿号分隔（如：大学死党、球友）" value="{{form.tags}}" bindinput="onTags" />
+  <textarea class="input" placeholder="备注（可选）" value="{{form.note}}" bindinput="onNote" style="min-height:120rpx" />
+  <button class="btn primary block" bindtap="savePerson">保存</button>
+  <button class="btn block" wx:if="{{mode === 'edit'}}" bindtap="cancelEdit">取消编辑</button>
+</view>
+
+<!-- 详情视图 -->
+<block wx:elif="{{p}}">
+  <view class="card">
+    <view style="display:flex;align-items:center;gap:20rpx">
+      <view style="width:100rpx;height:100rpx;border-radius:50%;background:rgba(127,174,131,.16);color:#5f8575;display:flex;align-items:center;justify-content:center;font-size:40rpx;font-weight:700">{{p.name[0]}}</view>
+      <view style="flex:1">
+        <view style="font-size:34rpx;font-weight:700">{{p.name}} <text class="chip">{{p.identity}}</text></view>
+        <view class="tag-row">
+          <text class="chip" wx:for="{{p.tags}}" wx:key="*this">{{item}}</text>
+          <text class="chip blue" wx:if="{{p.birthday}}">生日 {{p.birthday}}</text>
+        </view>
+        <view wx:if="{{p.note}}" style="font-size:24rpx;color:#a89b88">{{p.note}}</view>
+      </view>
+    </view>
+    <view style="margin:14rpx 0;padding:16rpx 20rpx;background:rgba(127,174,131,.08);border:1rpx dashed rgba(127,174,131,.35);border-radius:14rpx;font-size:25rpx;line-height:1.7">{{rel}}</view>
+    <canvas type="2d" id="pRadar" style="width:560rpx;height:400rpx;margin:10rpx auto;display:block"></canvas>
+    <view class="dimrow" wx:for="{{dimRows}}" wx:key="n">
+      <view class="nm">{{item.n}}</view>
+      <view class="track"><view class="fill {{item.neg ? 'neg' : ''}}" style="width:{{item.v}}%;{{item.neg ? 'background:linear-gradient(90deg,#e0b3a8,#c58b8b)' : ''}}"></view></view>
+      <view class="v" style="{{item.neg ? 'color:#c58b8b' : ''}}">{{item.v}}</view>
+    </view>
+    <view style="font-size:22rpx;color:#a89b88;margin-top:12rpx">可手动微调「热度」（自动计算仅供参考，人情最终以你为准）：当前 {{p.heat}}{{p.adjust ? '（含手动 ' + p.adjust + '）' : ''}}</view>
+    <view style="display:flex;gap:12rpx;justify-content:center;margin-top:10rpx">
+      <view class="btn sm" data-d="-5" bindtap="adjust">-5</view>
+      <view class="btn sm" data-d="-1" bindtap="adjust">-1</view>
+      <view class="btn sm" data-d="1" bindtap="adjust">+1</view>
+      <view class="btn sm" data-d="5" bindtap="adjust">+5</view>
+    </view>
+  </view>
+
+  <view class="card">
+    <view class="card-title">走动建议</view>
+    <view style="font-size:27rpx;line-height:1.8;margin-top:10rpx">{{suggestion}}</view>
+  </view>
+
+  <view class="card">
+    <view class="card-title">往来时间线（{{p.eventCount}}）</view>
+    <view class="tlitem" wx:for="{{timeline}}" wx:key="id">
+      <view class="th">{{item.timeText}} · {{item.type}} · 人情 {{item.weight > 0 ? '+' : ''}}{{item.weight}}</view>
+      <view class="tt">{{item.title}}</view>
+      <view wx:if="{{item.note}}" class="tn">{{item.note}}</view>
+      <view style="text-align:right;margin-top:6rpx">
+        <view class="btn sm danger" data-id="{{item.id}}" bindtap="delEvent">删除</view>
+      </view>
+    </view>
+    <view wx:if="{{!timeline.length}}" class="card-sub" style="text-align:center;padding:20rpx 0">还没有往来记录，去「记录」页记第一笔吧</view>
+  </view>
+
+  <view style="display:flex;justify-content:center;padding:0 20rpx 40rpx;flex-wrap:wrap">
+    <button class="btn primary" bindtap="goRecord">记一笔</button>
+    <button class="btn" bindtap="addReminder">添加提醒</button>
+    <button class="btn" bindtap="openEdit">编辑</button>
+    <button class="btn danger" bindtap="delPerson">删除人脉</button>
+  </view>
+</block>

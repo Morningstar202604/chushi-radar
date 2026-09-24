@@ -1,0 +1,53 @@
+<view wx:if="{{!persons.length}}" class="empty">
+  <view class="t">先添加人脉</view>
+  <view class="d">记录往来要先关联一个人，去「人脉」页添加第一位重要的人吧。</view>
+</view>
+
+<block wx:else>
+  <view class="card">
+    <view class="card-title">记一笔往来</view>
+    <picker mode="selector" range="{{persons}}" range-key="name" value="{{personIdx}}" bindchange="onPersonChange">
+      <view class="input" style="display:flex;justify-content:space-between;align-items:center">
+        <text>{{persons[personIdx].name}} · {{persons[personIdx].identity}}</text>
+        <text style="color:#a89b88">切换 ▾</text>
+      </view>
+    </picker>
+
+    <view class="card-sub" style="margin-top:12rpx">事件类型</view>
+    <view class="tag-row">
+      <view class="chip-sel {{item.on ? 'on' : ''}}" wx:for="{{types}}" wx:key="key" data-k="{{item.key}}" bindtap="tapType">{{item.label}} {{item.w}}</view>
+    </view>
+
+    <input class="input" placeholder="一句话（可选，如：请老张吃了顿烧烤）" value="{{title}}" bindinput="onTitle" />
+    <picker mode="date" value="{{date}}" bindchange="onDate">
+      <view class="input" style="display:flex;justify-content:space-between">
+        <text>{{date || '选择日期（默认今天）'}}</text><text style="color:#a89b88">▾</text>
+      </view>
+    </picker>
+
+    <view style="display:flex;align-items:center;justify-content:space-between;margin-top:12rpx">
+      <view class="card-sub">人情值</view>
+      <view style="display:flex;align-items:center;gap:20rpx">
+        <view class="btn sm" data-d="-5" bindtap="step">-5</view>
+        <view class="btn sm" data-d="-1" bindtap="step">-1</view>
+        <view style="font-size:34rpx;font-weight:700;color:#5f8575;min-width:80rpx;text-align:center">{{weight}}</view>
+        <view class="btn sm" data-d="1" bindtap="step">+1</view>
+        <view class="btn sm" data-d="5" bindtap="step">+5</view>
+      </view>
+    </view>
+
+    <input class="input" placeholder="备注（可选）" value="{{note}}" bindinput="onNote" />
+    <button class="btn primary block" bindtap="submit">保存这笔往来</button>
+  </view>
+
+  <view class="card" wx:if="{{recent.length}}">
+    <view class="card-title">最近往来 <text class="card-sub">{{canUndo ? '· 可撤销上一条' : ''}}</text></view>
+    <view class="tlitem" wx:for="{{recent}}" wx:key="id">
+      <view class="th">{{item.timeText}} · {{item.type}} · 人情 {{item.weight > 0 ? '+' : ''}}{{item.weight}}</view>
+      <view class="tt">{{item.title}}（{{item.person}}）</view>
+      <view style="text-align:right;margin-top:6rpx">
+        <view class="btn sm danger" data-id="{{item.id}}" bindtap="delEvent">删除</view>
+      </view>
+    </view>
+  </view>
+</block>

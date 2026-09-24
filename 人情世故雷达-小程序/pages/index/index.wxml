@@ -1,0 +1,41 @@
+<view wx:if="{{!hasData}}" class="empty">
+  <view class="t">人情世故雷达</view>
+  <view class="d">把生命中重要的人记进来，雷达会自动生成为你经营人情的清单。先去「人脉」添加第一个人，或去「记录」记第一笔往来。</view>
+  <button class="btn primary" bindtap="goRecord">去记一笔</button>
+  <button class="btn" bindtap="goTrain">去修炼场</button>
+</view>
+
+<block wx:else>
+  <view class="card" style="text-align:center">
+    <view class="card-sub">人情指数</view>
+    <view style="font-size:88rpx;font-weight:700;color:#5f8575;line-height:1.2">{{index}}</view>
+    <view class="card-sub">五维雷达 · 综合你的人脉规模、热度、频率、信用与智慧</view>
+  </view>
+
+  <view class="card">
+    <view class="card-title">五维画像</view>
+    <canvas type="2d" id="radarCanvas" style="width:560rpx;height:420rpx;margin:16rpx auto;display:block"></canvas>
+    <view class="dimrow" wx:for="{{dimRows}}" wx:key="n">
+      <view class="nm">{{item.n}}</view>
+      <view class="track"><view class="fill" style="width:{{item.v}}%"></view></view>
+      <view class="v">{{item.v}}</view>
+    </view>
+  </view>
+
+  <view class="card" wx:if="{{alerts.length}}">
+    <view class="card-title">今日提醒 <text class="card-sub">（{{alerts.length}} 条）</text></view>
+    <view wx:for="{{alerts}}" wx:key="text" style="padding:14rpx 0;border-bottom:1rpx solid rgba(185,164,128,.25)" bindtap="{{item.reminderId ? 'quickDone' : (item.personId ? 'openPerson' : '')}}"
+      data-id="{{item.personId}}" data-rid="{{item.reminderId}}">
+      <view style="display:flex;align-items:center;gap:14rpx">
+        <view style="width:12rpx;height:12rpx;border-radius:50%;background:{{item.level===0?'#b65f5f':item.level===1?'#d98a4a':item.level===2?'#c9a86a':'#7d8bb0'}}"></view>
+        <view style="flex:1;font-size:26rpx">{{item.text}}</view>
+        <view wx:if="{{item.reminderId}}" class="btn sm" catchtap="quickDone" data-rid="{{item.reminderId}}">完成</view>
+      </view>
+    </view>
+  </view>
+
+  <view style="display:flex;justify-content:center;padding:10rpx 0 30rpx">
+    <button class="btn primary" bindtap="goRecord">记一笔</button>
+    <button class="btn" bindtap="goTrain">去修炼</button>
+  </view>
+</block>

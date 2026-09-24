@@ -1,0 +1,171 @@
+/* 人情世故雷达 · 日记本设计系统（与网页版一致） */
+page {
+  --paper: #f6f1e4;
+  --card: #fffdf6;
+  --ink: #4a4238;
+  --dim: #a89b88;
+  --line: rgba(185, 164, 128, .4);
+  --teal: #5f8575;
+  --teal2: #9cbfa8;
+  --amber: #c9a86a;
+  --rose: #c58b8b;
+  --red: #b65f5f;
+  --blue: #7d8bb0;
+  background: var(--paper);
+  color: var(--ink);
+  font-size: 28rpx;
+  line-height: 1.6;
+  font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Noto Serif SC", serif;
+}
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 18rpx;
+  padding: 24rpx;
+  margin: 0 20rpx 20rpx;
+  box-shadow: 0 2rpx 8rpx rgba(95, 133, 117, .06);
+}
+.card-title {
+  font-size: 30rpx;
+  font-weight: 700;
+  color: var(--teal);
+}
+.card-sub {
+  font-size: 24rpx;
+  color: var(--dim);
+  margin-top: 4rpx;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14rpx 26rpx;
+  border-radius: 999rpx;
+  font-size: 26rpx;
+  background: #fff;
+  color: var(--teal);
+  border: 1px solid var(--teal);
+  line-height: 1;
+  margin: 6rpx;
+}
+.btn.primary {
+  background: var(--teal);
+  color: #fff;
+  border-color: var(--teal);
+}
+.btn.danger { color: var(--red); border-color: var(--red); background: #fff; }
+.btn.sm { padding: 10rpx 20rpx; font-size: 24rpx; }
+.btn.block { display: flex; width: 100%; margin: 16rpx 0 0; }
+.btn-hover { opacity: .8; }
+
+.chip {
+  display: inline-block;
+  padding: 4rpx 16rpx;
+  border-radius: 999rpx;
+  font-size: 22rpx;
+  margin: 4rpx 8rpx 4rpx 0;
+  background: rgba(127, 174, 131, .14);
+  color: var(--teal);
+}
+.chip.teal { background: rgba(127,174,131,.14); color: var(--teal); }
+.chip.amber { background: rgba(201,168,106,.16); color: #9a7a3a; }
+.chip.red { background: rgba(182,95,95,.12); color: var(--red); }
+.chip.blue { background: rgba(125,139,176,.14); color: var(--blue); }
+
+.chips-row { display: flex; flex-wrap: wrap; padding: 0 20rpx; }
+.chip-sel {
+  display: inline-block;
+  padding: 10rpx 22rpx;
+  border-radius: 999rpx;
+  font-size: 24rpx;
+  margin: 6rpx 12rpx 6rpx 0;
+  background: #fff;
+  border: 1px solid var(--line);
+  color: var(--dim);
+}
+.chip-sel.on { background: var(--teal); border-color: var(--teal); color: #fff; }
+
+.input {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 12rpx;
+  padding: 18rpx 20rpx;
+  font-size: 26rpx;
+  width: 100%;
+  box-sizing: border-box;
+  margin: 8rpx 0;
+  color: var(--ink);
+}
+.placeholder { color: var(--dim); }
+
+.empty {
+  padding: 80rpx 40rpx;
+  text-align: center;
+  color: var(--dim);
+}
+.empty .t { font-size: 32rpx; color: var(--ink); font-weight: 700; }
+.empty .d { font-size: 24rpx; margin-top: 12rpx; line-height: 1.7; }
+
+/* 进度条 */
+.track {
+  flex: 1;
+  height: 14rpx;
+  background: rgba(185, 164, 128, .22);
+  border-radius: 999rpx;
+  overflow: hidden;
+}
+.fill {
+  height: 100%;
+  border-radius: 999rpx;
+  background: linear-gradient(90deg, var(--teal2), var(--teal));
+}
+.dimrow { display: flex; align-items: center; gap: 16rpx; padding: 10rpx 0; }
+.dimrow .nm { width: 150rpx; font-size: 24rpx; color: var(--dim); }
+.dimrow .v { width: 70rpx; text-align: right; font-size: 24rpx; font-weight: 700; color: var(--teal); }
+
+/* 时间线 */
+.tlitem { position: relative; padding: 16rpx 0 16rpx 30rpx; border-left: 2rpx solid var(--line); }
+.tlitem::before {
+  content: "";
+  position: absolute; left: -8rpx; top: 28rpx;
+  width: 14rpx; height: 14rpx; border-radius: 50%;
+  background: var(--teal2); border: 2rpx solid var(--card);
+}
+.tlitem.neg::before { background: var(--rose); }
+.tlitem .th { font-size: 24rpx; color: var(--dim); }
+.tlitem .tt { font-size: 28rpx; font-weight: 600; }
+.tlitem .tn { font-size: 24rpx; color: var(--dim); }
+
+.sep { height: 2rpx; background: var(--line); opacity: .5; margin: 12rpx 0; }
+
+/* 弹层 */
+.mask {
+  position: fixed; inset: 0;
+  background: rgba(74, 66, 56, .45);
+  z-index: 999;
+  display: flex;
+  align-items: flex-end;
+}
+.sheet {
+  width: 100%;
+  max-height: 84vh;
+  background: var(--paper);
+  border-radius: 30rpx 30rpx 0 0;
+  padding: 28rpx 30rpx 60rpx;
+  box-sizing: border-box;
+  overflow-y: auto;
+}
+.sheet-title { font-size: 32rpx; font-weight: 700; color: var(--teal); margin-bottom: 16rpx; }
+
+.toast-wrap { position: fixed; top: 40%; left: 0; right: 0; display: flex; justify-content: center; z-index: 1000; pointer-events: none; }
+.toast {
+  background: rgba(74, 66, 56, .92);
+  color: #fffdf6;
+  padding: 16rpx 32rpx;
+  border-radius: 999rpx;
+  font-size: 26rpx;
+}
+
+.tag-row { display: flex; flex-wrap: wrap; margin: 4rpx 0; }
