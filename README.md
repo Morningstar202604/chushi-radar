@@ -23,12 +23,15 @@
 
 旧版「处世 Radar」是 81 道题的社交智力测验（9 维打分）；v2 起彻底重构为**经营型玩法**：你只需要在饭局散场后花 10 秒记一笔往来，雷达自动完成其余一切——画关系画像、算人情热度、提醒你该走动、该还人情、该送祝福。
 
-## 官网
+## 在线体验
 
-品牌门户页（玩法介绍 / 双端入口 / 隐私说明 / 版本历程 / 开源链接）：
+- **国内主力**（豆包网页应用，PWA 可安装）：<https://4m2km3hh7ey1t.doubaoapps.com/app/app_17eru2vjvng>
+- **GitHub Pages**（海外/镜像仓库直达，国内访问可能不稳）：
+  - <https://x33834.github.io/chushi-radar/>
+  - <https://morningstar202604.github.io/chushi-radar/>
+- **官网**（品牌门户）：<https://4m2km3hh7ey1t.doubaoapps.com/app/app_17es9apfbjy>，源码在 `官网/人情世故雷达官网.html`
 
-- 在线访问：<https://4m2km3hh7ey1t.doubaoapps.com/app/app_17es9apfbjy>
-- 源码：本仓库 `官网/人情世故雷达官网.html`（单文件自包含）
+所有版本同源：仓库根 `index.html` 即网页版（与 `人情世故雷达.html` 同内容），推送 main 后 GitHub Pages 自动部署。
 
 ## 核心玩法（五模块闭环）
 
