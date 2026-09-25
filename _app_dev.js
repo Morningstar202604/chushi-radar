@@ -250,7 +250,8 @@ function overallMetrics() {
   const pms = state.persons.map(p => computePerson(p));
   const scale = clamp(n * 12, 5, 100);
   const heatAvg = avg(pms.map(p => p.heat));
-  const freq = clamp(state.events.filter(e => now - e.time < 30 * DAY).length * 12, 0, 100);
+  const n30 = state.events.filter(e => now - e.time < 30 * DAY).length;
+  const freq = Math.round(100 * (1 - Math.exp(-n30 / 6))); // 软饱和：每笔都有增量，不封死
   const credit = clamp(100 - avg(pms.map(p => p.debt)), 0, 100);
   const wisdom = getWisdom();
   const index = Math.round(0.20 * scale + 0.25 * heatAvg + 0.20 * freq + 0.20 * credit + 0.15 * wisdom);
