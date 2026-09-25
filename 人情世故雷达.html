@@ -248,7 +248,7 @@ textarea.inp{resize:vertical;min-height:64px;line-height:1.6}
   <header class="topbar">
     <div class="brand">
       <svg viewBox="0 0 32 32" fill="none"><path d="M16 3 29 16 16 29 3 16Z" stroke="#5f8575" stroke-width="1.8" stroke-linejoin="round" fill="rgba(95,133,117,.10)"/><path d="M16 9.5 23 16l-7 6.5L9 16z" stroke="#9cbfa8" stroke-width="1.2" stroke-linejoin="round"/><path d="M5 20.5c6-7.5 16-7.5 22 0" stroke="#c9a86a" stroke-width="1.8" stroke-linecap="round"/><circle cx="16" cy="16" r="2.2" fill="#5f8575" stroke="none"/></svg>
-      <span>人情世故雷达<span class="slogan">把人情账记明白</span></span><span class="ver">v2.7</span>
+      <span>人情世故雷达<span class="slogan">把人情账记明白</span></span><span class="ver">v2.8</span>
     </div>
     <div class="scorebox">
       <div class="lab">人情指数</div>
@@ -342,7 +342,7 @@ const esc = (s) => String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ({ '&':
 
 /* 品牌（Logo / 名称 / Slogan 统一出口） */
 const LOGO_SVG = `<svg viewBox="0 0 32 32" fill="none"><path d="M16 3 29 16 16 29 3 16Z" stroke="#5f8575" stroke-width="1.8" stroke-linejoin="round" fill="rgba(95,133,117,.10)"/><path d="M16 9.5 23 16l-7 6.5L9 16z" stroke="#9cbfa8" stroke-width="1.2" stroke-linejoin="round"/><path d="M5 20.5c6-7.5 16-7.5 22 0" stroke="#c9a86a" stroke-width="1.8" stroke-linecap="round"/><circle cx="16" cy="16" r="2.2" fill="#5f8575" stroke="none"/></svg>`;
-const BRAND = { name: '人情世故雷达', slogan: '把人情账记明白，把关系经营成细水长流', en: 'RENQING · RADAR', version: 'v2.7' };
+const BRAND = { name: '人情世故雷达', slogan: '把人情账记明白，把关系经营成细水长流', en: 'RENQING · RADAR', version: 'v2.8' };
 
 function timeAgo(ts) {
   const s = (Date.now() - ts) / 1000;
@@ -956,6 +956,22 @@ function afterRender() {
       tooltip: { trigger: 'axis', backgroundColor: '#fffdf7', borderColor: 'rgba(185,164,128,.35)', borderWidth: 1, textStyle: { color: '#4a4238', fontSize: 12 }, formatter: (ps) => ps[0].axisValue + '：' + ps[0].value + ' 笔往来' }
     });
   }
+  if (state.tab === 'me' && document.getElementById('typeChart')) {
+    const nowT = new Date();
+    const yStartT = `${nowT.getFullYear() - 1}-${String(nowT.getMonth() + 1).padStart(2, '0')}-01`;
+    const tCnt = {};
+    for (const e of state.events) if (fmtDate(e.time) >= yStartT) tCnt[e.type] = (tCnt[e.type] || 0) + 1;
+    const data = Object.entries(tCnt).map(([k, v]) => ({ name: (EVENT_TYPES[k] || EVENT_TYPES.other).label, value: v }));
+    if (data.length) {
+      makeChart('typeChart', {
+        backgroundColor: 'transparent',
+        tooltip: { trigger: 'item', backgroundColor: '#fffdf7', borderColor: 'rgba(185,164,128,.35)', borderWidth: 1, textStyle: { color: '#4a4238', fontSize: 12 }, formatter: '{b}：{c} 笔（{d}%）' },
+        legend: { bottom: 0, textStyle: { color: '#7d7263', fontSize: 10 }, itemWidth: 10, itemHeight: 10, itemGap: 10 },
+        series: [{ type: 'pie', radius: ['46%', '66%'], center: ['50%', '42%'], itemStyle: { borderColor: '#fffdf7', borderWidth: 2 }, label: { show: false }, data }],
+        color: ['#5f8575', '#7da08f', '#9cbfa8', '#c9a86a', '#8aa6c9', '#c97b7b', '#a8c0da', '#b9a484', '#7fae83', '#d3c4a8']
+      });
+    }
+  }
 }
 /* 点雷达图：按点击角度就近匹配五维，打开解读 */
 function onHomeChartClick(params) {
@@ -1054,9 +1070,10 @@ function viewRadar() {
     alertHtml = `<div class="card"><h3><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#c9a86a" stroke-width="2" stroke-linecap="round"><path d="M12 3a9 9 0 1 0 9 9"/><path d="M12 8v5m0 3h.01"/></svg>今日提醒（${alerts.length}）</h3>
       <div style="margin-top:6px">${alerts.map(a => {
         const [col, ic] = icMap[a.cls] || icMap.blue;
-        return `<div class="alertitem"${a.personId && !a.reminderId ? ` data-act="openPerson" data-arg="${a.personId}"` : ''}>
+        const act = a.personId && !a.reminderId ? ` data-act="openPerson" data-arg="${a.personId}"` : (a.personId ? '' : ' data-act="festTip"');
+        return `<div class="alertitem"${act}>
           <div class="ic" style="background:${col}22;color:${col}"><svg viewBox="0 0 24 24">${ic}</svg></div>
-          <div class="tx" style="flex:1">${a.text}</div>${a.reminderId ? `<button class="btn sm ghost" data-act="quickDone" data-arg="${a.reminderId}">完成</button>` : ''}</div>`;
+          <div class="tx" style="flex:1">${a.text}</div>${a.personId && !a.reminderId ? `<button class="btn sm ghost" data-act="eventQuick" data-arg="${a.personId}" style="flex-shrink:0">记一笔</button>` : ''}${a.reminderId ? `<button class="btn sm ghost" data-act="quickDone" data-arg="${a.reminderId}">完成</button>` : ''}</div>`;
       }).join('')}</div></div>`;
   } else {
     alertHtml = `<div class="card"><h3>今日提醒</h3><div class="sub" style="margin-top:6px">一切安好，没有需要操心的往来。人情是细水长流，保持节奏就好。</div></div>`;
@@ -1130,8 +1147,11 @@ function viewPersons() {
     <div style="padding:0 14px 10px"><input class="inp" id="fSearch" placeholder="搜索姓名 / 标签 / 备注…" value="${esc(state.filter)}" data-change="search"></div>
     <div class="fchips">${chips}</div>
     <div class="fchips" style="padding-top:0"><span style="font-size:12px;color:var(--dim);padding:6px 4px">排序</span>${sortChips}</div>
-    ${cards || `<div class="empty"><div class="t">还没有人脉</div><div class="d">把生命中重要的人记进来，雷达会自动生成为你经营人情的清单。</div>
-      <button class="btn primary" data-act="personForm">添加第一个人</button></div>`}`;
+    ${cards || (state.persons.length
+      ? `<div class="empty"><div class="t">没有找到相关人脉</div><div class="d">换个关键词试试，或直接添加一位新的人脉。</div>
+        <button class="btn primary" data-act="personForm">＋ 添加新朋友</button></div>`
+      : `<div class="empty"><div class="t">还没有人脉</div><div class="d">把生命中重要的人记进来，雷达会自动生成为你经营人情的清单。</div>
+        <button class="btn primary" data-act="personForm">添加第一个人</button></div>`)}`;
 }
 
 /* ---------- 快速记录 ---------- */
@@ -1179,8 +1199,9 @@ function viewRecord() {
       ${persons.length ? '' : '<div class="sub" style="margin-top:8px;text-align:center">还没有人脉，先添加一位再记录。</div>'}
     </div>
     <div class="card">
-      <h3>最近往来</h3>
+      <h3>最近往来 <span style="margin-left:auto;font-weight:400;font-size:12px;color:var(--sub)">${state.events.length} 笔</span></h3>
       <div class="tl" style="margin-top:10px">${evRows || '<div class="sub">还没有记录，从上面记第一笔开始。</div>'}</div>
+      ${state.events.length > 8 ? '<button class="btn sm" style="margin-top:10px" data-act="allEvents">查看全部往来</button>' : ''}
     </div>`;
 }
 function typeIcon(k) {
@@ -1301,6 +1322,7 @@ function openAnnualReport() {
       <div class="sub">最近 12 个月 · ${months[0].label} — ${months[11].label}</div>
       <div style="font-size:34px;font-weight:700;color:var(--teal);margin:6px 0 2px;font-family:var(--kaiti)">${total}</div>
       <div class="sub">笔人情往来 · 段位「${lv.cur.name}」· 智慧值 ${w}</div>
+      ${total === 0 ? '<button class="btn primary block" style="margin-top:12px" data-act="go" data-arg="record">去记录第一笔往来</button>' : ''}
     </div>
     <div class="card" style="margin:0 0 12px;padding:12px 14px">
       <h3>月度节奏</h3>
@@ -1342,6 +1364,23 @@ function openClipboardImport() {
   `, true);
 }
 
+/* 全部往来：一次看全所有记录（最近 200 条） */
+function openAllEvents() {
+  const all = state.events.slice().sort((a, b) => b.time - a.time).slice(0, 200);
+  const rows = all.map(e => {
+    const p = state.persons.find(x => x.id === e.personId);
+    const t = EVENT_TYPES[e.type] || EVENT_TYPES.other;
+    return `<div class="tlitem ${e.weight < 0 ? 'neg' : ''}">
+      <div class="th">${esc(p ? p.name : '未知')}<span class="chip">${t.label}</span><span class="w ${e.weight < 0 ? 'neg' : ''}">${e.weight > 0 ? '+' : ''}${e.weight}</span><button class="delbtn" data-act="delEvent" data-arg="${e.id}">删</button></div>
+      <div class="tm">${esc(e.title)} · ${fmtDate(e.time)} · ${timeAgo(e.time)}${e.note ? ' · ' + esc(e.note) : ''}</div>
+    </div>`;
+  }).join('');
+  openSheet(`全部往来 <span style="font-size:12px;color:var(--sub)">${state.events.length} 笔</span>`, `
+    <div class="tl">${rows || '<div class="sub">还没有任何往来记录，去「记录」页记第一笔吧。</div>'}</div>
+    ${state.events.length > 200 ? '<div class="sub" style="margin-top:10px">仅展示最近 200 条，删除后热度会重新计算。</div>' : ''}
+  `);
+}
+
 /* ---------- 我的 ---------- */
 function viewMe() {
   const m = overallMetrics();
@@ -1367,6 +1406,30 @@ function viewMe() {
     ['人脉规模', m.scale], ['人情热度', Math.round(m.heatAvg)], ['往来频率', m.freq],
     ['人情信用', Math.round(m.credit)], ['处世智慧', m.wisdom]
   ] : [];
+  /* 最值得经营的人：热度 Top3 */
+  const top3 = state.persons.map(p => ({ p, h: computePerson(p) }))
+    .sort((a, b) => b.h.heat - a.h.heat).slice(0, 3);
+  const top3Html = top3.map(x => {
+    const mh = x.h;
+    const last = mh.lastDays === null ? '尚无往来'
+      : timeAgo(state.events.filter(e => e.personId === x.p.id).reduce((mx, e) => Math.max(mx, e.time), 0));
+    return `<div class="personcard" data-act="openPerson" data-arg="${x.p.id}" style="margin-bottom:8px">
+      <div class="avatar">${esc(initials(x.p.name))}</div>
+      <div class="pc-main">
+        <div class="pc-name">${esc(x.p.name)} <span class="chip teal">${esc(x.p.identity || '朋友')}</span></div>
+        <div class="pc-meta">${(x.p.tags || []).slice(0, 2).map(t => `<span class="chip">${esc(t)}</span>`).join('')}<span style="font-size:12px;color:var(--dim)">${last}</span></div>
+        <div class="heatbar"><span style="font-size:11px;color:var(--dim)">热度</span>
+          <div class="track"><div class="fill" style="width:${mh.heat}%"></div></div>
+          <span class="val">${Math.round(mh.heat)}</span></div>
+      </div>
+    </div>`;
+  }).join('');
+  /* 往来类型分布（近 12 个月） */
+  const nowT = new Date();
+  const yStartT = `${nowT.getFullYear() - 1}-${String(nowT.getMonth() + 1).padStart(2, '0')}-01`;
+  const tCnt = {};
+  for (const e of state.events) if (fmtDate(e.time) >= yStartT) tCnt[e.type] = (tCnt[e.type] || 0) + 1;
+  const tTotal = Object.values(tCnt).reduce((s, v) => s + v, 0);
   return `
     <div class="sec-t"><h2>我的</h2></div>
     <div class="card"><div class="statgrid">${stats}</div></div>
@@ -1387,10 +1450,21 @@ function viewMe() {
         提醒：本月${ins.count ? '有 ' + ins.count + ' 笔往来，保持节奏' : '还没有往来记录，去「记录」页记一笔吧'}
       </div>
     </div>
+    ${top3.length >= 2 ? `<div class="card">
+      <h3>最值得经营的人 <span style="margin-left:auto;font-weight:400;font-size:12px;color:var(--sub)">热度 Top 3</span></h3>
+      <div class="sub" style="margin-top:4px">热度最高、最该保持走动的人，点卡片看细节。</div>
+      <div style="margin-top:10px">${top3Html}</div>
+    </div>` : ''}
     <div class="card">
       <h3>近 6 月往来趋势</h3>
       <div class="sub" style="margin-top:4px">每月记了多少笔往来，看看自己的经营节奏。</div>
       <div id="trendChart" class="chart" style="height:170px;margin-top:6px"></div>
+    </div>
+    <div class="card">
+      <h3>往来类型分布</h3>
+      <div class="sub" style="margin-top:4px">近 12 个月，饭局、互助、送礼……哪些往来占了多数。</div>
+      ${tTotal ? `<div id="typeChart" class="chart" style="height:180px;margin-top:6px"></div>`
+        : '<div class="sub" style="margin-top:10px">还没有数据，记录往来后这里会画出你的往来结构。</div>'}
     </div>
     <div class="card">
       <h3>人情画像</h3>
@@ -1682,7 +1756,11 @@ function onClick(e) {
   if (el.dataset.stop) return;
   const act = el.dataset.act, arg = el.dataset.arg;
   switch (act) {
-    case 'go': state.tab = arg; render(); break;
+    case 'go': {
+      state.tab = arg; render();
+      try { localStorage.setItem('rqsg_tab', arg); } catch (e) {}
+      break;
+    }
 
     case 'openPerson': openPerson(arg); break;
     case 'personForm': personForm(arg || ''); break;
@@ -1756,6 +1834,9 @@ function onClick(e) {
     }
 
     case 'eventModal': eventModal(arg); break;
+    case 'eventQuick': eventModal(arg); break;
+    case 'festTip': toast('节日提醒：记得给重要的人送上祝福、走动一下'); break;
+    case 'allEvents': openAllEvents(); break;
     case 'modalType': {
       window.__modalType = arg; window.__modalWeight = EVENT_TYPES[arg].dHeat;
       const w = document.getElementById('efWeight'); if (w) w.textContent = window.__modalWeight;
@@ -1894,6 +1975,7 @@ function onClick(e) {
       state.persons = []; state.events = []; state.reminders = []; state.progress = {};
       state.streak = { n: 0, last: '' }; state.lastEventId = null;
       state.filter = ''; state.identity = 'all'; state.sortBy = 'heat'; state.trainDiff = '全部'; state.tab = 'radar';
+      try { localStorage.setItem('rqsg_tab', 'radar'); } catch (e) {}
       store.save(); closeModal(); render(); toast('数据已清空');
       break;
     }
@@ -1996,6 +2078,8 @@ function installCard() {
 /* ---------------- 11. 启动 ---------------- */
 function init() {
   store.load();
+  const savedTab = localStorage.getItem('rqsg_tab');
+  if (savedTab && ['radar', 'persons', 'record', 'train', 'me'].includes(savedTab)) state.tab = savedTab;
   render();
   if (!state.persons.length && localStorage.getItem('rqsg_welcomed') !== '1') {
     /* 首次打开：品牌欢迎引导 */

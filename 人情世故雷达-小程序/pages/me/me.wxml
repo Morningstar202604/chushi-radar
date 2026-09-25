@@ -32,6 +32,23 @@
   </view>
 </view>
 
+<view class="card" wx:if="{{top3.length >= 2}}">
+  <view class="card-title">最值得经营的人 <text style="float:right;font-size:22rpx;font-weight:400;color:#a89b88">热度 Top 3</text></view>
+  <view class="card-sub">热度最高、最该保持走动的人，点卡片看细节。</view>
+  <view wx:for="{{top3}}" wx:key="id" bindtap="openDetail" data-id="{{item.id}}" style="display:flex;align-items:center;gap:16rpx;padding:14rpx 0;border-bottom:1rpx dashed rgba(185,164,128,.3)">
+    <view style="width:76rpx;height:76rpx;border-radius:50%;background:linear-gradient(135deg,#7da08f,#5f8575);color:#f6f1e4;display:flex;align-items:center;justify-content:center;font-size:30rpx;flex-shrink:0">{{item.name[0]}}</view>
+    <view style="flex:1;min-width:0">
+      <view style="font-size:28rpx;color:#4a4238"><text style="font-weight:700">{{item.name}}</text> <text class="chip">{{item.identity}}</text></view>
+      <view style="font-size:22rpx;color:#a89b88;margin-top:4rpx">{{item.last}}</view>
+      <view style="display:flex;align-items:center;gap:10rpx;margin-top:8rpx">
+        <text style="font-size:20rpx;color:#a89b88">热度</text>
+        <view style="flex:1;height:10rpx;background:rgba(185,164,128,.22);border-radius:5rpx;overflow:hidden"><view style="height:100%;width:{{item.heat}}%;background:linear-gradient(90deg,#9cbfa8,#5f8575);border-radius:5rpx"></view></view>
+        <text style="font-size:22rpx;color:#5f8575;font-weight:700">{{item.heat}}</text>
+      </view>
+    </view>
+  </view>
+</view>
+
 <view class="card">
   <view class="card-title">近 6 月往来趋势</view>
   <view class="card-sub">每月记了多少笔往来，看看自己的经营节奏。</view>

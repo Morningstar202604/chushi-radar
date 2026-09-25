@@ -8,11 +8,12 @@ Page({
     trend: [],
     trendMax: 1,
     dims: [], dimRows: [], w: 0, levelName: '',
+    top3: [],
     report: null,
     showReport: false,
     showImport: false,
     importText: '',
-    version: 'v2'
+    version: 'v2.8'
   },
   onShow() {
     const S = engine.getState();
@@ -37,13 +38,24 @@ Page({
     const labels = ['人脉规模', '人情热度', '往来频率', '人情信用', '处世智慧'];
     const vals = m ? [m.scale, Math.round(m.heatAvg), m.freq, Math.round(m.credit), m.wisdom] : [0, 0, 0, 0, 0];
     const dimRows = labels.map((l, i) => ({ n: l, v: vals[i] }));
+    const top3 = S.persons.map(p => ({ p, h: engine.computePerson(p) }))
+      .sort((a, b) => b.h.heat - a.h.heat).slice(0, 3)
+      .map(x => ({
+        id: x.p.id, name: x.p.name, identity: x.p.identity || '朋友',
+        tags: (x.p.tags || []).slice(0, 2),
+        heat: Math.round(x.h.heat),
+        last: x.h.lastDays === null ? '尚无往来' : engine.timeAgo(
+          S.events.filter(e => e.personId === x.p.id).reduce((mx, e) => Math.max(mx, e.time), 0))
+      }));
     this.setData({
       stats, reminders, month,
       trend: trend.map(t => ({ label: t.label, c: t.c })),
       trendMax: Math.max.apply(null, trend.map(t => t.c).concat([1])),
-      dims: labels, dimRows, w, levelName: lv.cur.name
+      dims: labels, dimRows, w, levelName: lv.cur.name,
+      top3
     });
   },
+  openDetail(e) { wx.navigateTo({ url: '/pages/detail/detail?id=' + e.currentTarget.dataset.id }); },
   quickDone(e) {
     const S = engine.getState();
     const id = e.currentTarget.dataset.id;

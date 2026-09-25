@@ -5,7 +5,7 @@
   <img src="https://img.shields.io/badge/平台-网页%20PWA%20%2B%20微信小程序-green" alt="Platform" />
   <img src="https://img.shields.io/badge/玩法-人脉经营-lightblue" alt="Playstyle" />
   <img src="https://img.shields.io/badge/存储-本地优先-blue" alt="Storage" />
-  <img src="https://img.shields.io/badge/版本-v2.7-orange" alt="Version" />
+  <img src="https://img.shields.io/badge/版本-v2.8-orange" alt="Version" />
   <img src="https://img.shields.io/badge/License-CC%20BY--NC%204.0-red" alt="License" />
   <br />
   <p>
@@ -64,6 +64,7 @@
 | v2.0 | 四合一重构：雷达/人脉/记录/修炼，原生 JS + ECharts（v1 答题版已删除，全部以 v2 经营版为主） |
 | v2.1–v2.6 | 农历节日提醒、日记本美术、安装引导、待办管理、维度解读、年度报告、备份迁移、批量修 bug |
 | v2.7 | 品牌体系（Logo/Slogan/欢迎引导/关于页）、提醒紧急度颜色修复 |
+| v2.8 | 提醒直通记录、全部往来总览、最值得经营的人 Top3、往来类型分布图；记住上次页面、搜索空态优化 |
 
 ## 运行
 
