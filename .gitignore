@@ -1,0 +1,5 @@
+# 开发中间产物
+_shots/
+_test/
+_backup/
+*.zip
