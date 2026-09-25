@@ -2,6 +2,9 @@
   <h1>人情世故雷达</h1>
   <p><b>把人情账记明白，把关系经营成细水长流</b></p>
   <p>人脉经营 · 人情账本 · 社交修炼 —— 本地优先的轻量个人助手</p>
+  <p>
+    <a href="README.md"><b>简体中文</b></a> · <a href="README.en.md">English</a>
+  </p>
   <img src="https://img.shields.io/badge/平台-网页%20PWA%20%2B%20微信小程序-green" alt="Platform" />
   <img src="https://img.shields.io/badge/玩法-人脉经营-lightblue" alt="Playstyle" />
   <img src="https://img.shields.io/badge/存储-本地优先-blue" alt="Storage" />
@@ -25,11 +28,13 @@
 
 ## 在线体验
 
-- **国内主力**（豆包网页应用，PWA 可安装）：<https://4m2km3hh7ey1t.doubaoapps.com/app/app_17eru2vjvng>
-- **GitHub Pages**（海外/镜像仓库直达，国内访问可能不稳）：
+- **网页版（GitHub Pages，push 即自动部署）**：
   - <https://x33834.github.io/chushi-radar/>
   - <https://morningstar202604.github.io/chushi-radar/>
-- **官网**（品牌门户）：<https://4m2km3hh7ey1t.doubaoapps.com/app/app_17es9apfbjy>，源码在 `官网/人情世故雷达官网.html`
+- **官网（品牌门户）**：<https://x33834.github.io/chushi-radar/%E5%AE%98%E7%BD%91/%E4%BA%BA%E6%83%85%E4%B8%96%E6%95%85%E9%9B%B7%E8%BE%BE%E5%AE%98%E7%BD%91.html>，源码在 `官网/人情世故雷达官网.html`
+- **本地使用**：直接打开仓库根 `人情世故雷达.html`（或 `index.html`）即可，单文件自包含、离线可用
+
+> 提示：GitHub Pages 在某些网络环境下直连可能较慢，可下载 `人情世故雷达.html` 到本机随时打开，功能完全一致。
 
 所有版本同源：仓库根 `index.html` 即网页版（与 `人情世故雷达.html` 同内容），推送 main 后 GitHub Pages 自动部署。
 
